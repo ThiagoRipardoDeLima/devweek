@@ -1,5 +1,8 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using src.Models;
+using src.Persistence;
 
 namespace src.Controllers;
 
@@ -7,50 +10,83 @@ namespace src.Controllers;
 [Route("[Controller]")]
 public class PersonController : ControllerBase
 {
+    private DatabaseContext _context { get; set; }
 
-    protected List<Person> persons = new List<Person>();
+    public PersonController(DatabaseContext context)
+    {
+        this._context = context;
+    }
 
     [HttpGet]
-    public List<Person> Hello()
+    public ActionResult<List<Person>> Get()
     {
-        //Person pessoa = new Person("Thiago", "123456", 35);
-        //Contract newContract = new Contract("123", 5.66);
-        //pessoa.contracts.Add(newContract);
-        return persons;
+        var result = _context.persons.Include(c => c.contracts).ToList();
+
+        if(!result.Any())
+        {
+            return NoContent();
+        }
+
+        return Ok(result);
     }
 
     [HttpPost()]
-    public List<Person> Post(Person person)
+    public ActionResult<Person> Post(Person person)
     {
-        persons.Add(person);
-        return persons;
+        _context.persons.Add(person);
+        _context.SaveChanges();
+
+        return Created("Criado", person);
     }
 
     [HttpPut("{id}")]
-    public string Update([FromRoute]int id, [FromBody]Person person)
+    public ActionResult<Object> Update(
+        [FromRoute]int id, 
+        [FromBody]Person person
+    )
     {
-        return "dados do id " + id + " atualizados";
+        try
+        {
+            _context.persons.Update(person);
+            _context.SaveChanges();    
+        }
+        catch (System.Exception)
+        {
+            
+            return BadRequest(new {
+                message = "Houve erro ao enviar a solicitação do "+ id + " atualizados",
+                status = HttpStatusCode.OK
+            });
+            
+        }
+        
+
+        return Ok(new {
+            message = "dados do id " + id + " atualizados",
+            status = HttpStatusCode.OK
+        });
     }
 
     [HttpDelete("{id}")]
-    public string Delete([FromRoute]int id)
+    public ActionResult<Object> Delete([FromRoute]int id)
     {
-        return "dados do id " + id + " deletados";
-    }
+        var result = _context.persons.SingleOrDefault(p => p.id == id);
 
-    /* private static readonly string[] Nomes = new[]
-    {
-        "THIAGO", "RIPARDO", "DE", "LIMA"
-    };
-
-    [HttpGet(Name="GetPerson")]
-    public IEnumerable<Person> Get()
-    {
-        return Enumerable.Range(0,Nomes.Length).Select(index => new Person
+        if(result == null)
         {
-            Nome = Nomes[index]
-        })
-        .ToArray();
-    } */
+            return BadRequest(new {
+                message = "Conteúdo inexistente, solicitação invalida",
+                status = HttpStatusCode.BadRequest
+            });
+        }
+
+        _context.persons.Remove(result);
+        _context.SaveChanges();
+
+        return Ok(new {
+                message = "Deletado pessoa com Id: " + id,
+                status = HttpStatusCode.OK
+            });
+    }
     
 }

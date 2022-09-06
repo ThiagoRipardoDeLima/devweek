@@ -1,4 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using src.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder
+    .Services
+    .AddDbContext<DatabaseContext>(o => o.UseInMemoryDatabase("dbContracts"));
+
+builder
+    .Services
+    .AddScoped<DatabaseContext, DatabaseContext>();
 
 // Add services to the container.
 

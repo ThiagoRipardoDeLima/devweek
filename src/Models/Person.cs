@@ -1,4 +1,3 @@
-
 namespace src.Models;
 
 public class Person
@@ -19,6 +18,7 @@ public class Person
         this.contracts = new List<Contract>();
     }
 
+    public int id { get; set; }
     public string Nome { get; set; }    
     public int Idade { get; set; }
     public string? Cpf { get; set; }

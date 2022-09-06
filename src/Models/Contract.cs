@@ -15,9 +15,11 @@ public class Contract
         this.Valor = value;
         this.DataCriacao = DateTime.Now;
     }
-    
+
+    public int id { get; set; }    
     public DateTime DataCriacao { get; set; }
     public string TokenId { get; set; }
     public double Valor { get; set; }
+    public int PersonId { get; set; }
     
 }
