@@ -4,7 +4,7 @@ using src.Enum;
 
 namespace src.Entities;
 
-public class News
+public class News : BaseEntity
 {
     public News(string hat, string title, string text, string author, string img, string link, Status status)
     {

@@ -1,11 +1,9 @@
-using MongoDB.Bson.Serialization.Attributes;
-
 using src.Enum;
+namespace src.Entities.ViewModel;
 
-namespace src.Models;
-
-public class NewsModels
+public class NewsViewModel
 {
+   public string Id { get; set; }
    public string Hat { get; set; }
    public string Title { get; set; }
    public string Text { get; set; }
