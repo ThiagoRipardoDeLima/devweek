@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Entities
 {
-    public class ApplicationUser
+    public class ApplicationUser : IdentityUser
     {
         
     }
