@@ -43,6 +43,12 @@ namespace WebApis.Token
             return this;
         }
 
+        public TokenJWTBuilder AddExpiry(int expiryInMinutes) 
+        {
+            this.expireInMinutes = expireInMinutes;
+            return this;
+        }
+
         private void EnsureArguments()
         {
             if (this.securityKey == null)

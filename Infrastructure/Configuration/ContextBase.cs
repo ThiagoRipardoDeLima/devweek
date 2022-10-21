@@ -32,7 +32,7 @@ namespace Infrastructure.Configuration
 
         public string GetConnectionString()
         {
-            return "Data Source=10.65.4.200\\SQLEXPRESS2008;Initial Catalog=API_DDD_2022;Integrated Security=False;User ID=sa;Password=se$c@gti2018;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
+            return "Data Source=localhost\\EXPRESS;Initial Catalog=API_DDD_2022;Integrated Security=False;User ID=sa;Password=MyPass@word;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
         }
     }
 }
