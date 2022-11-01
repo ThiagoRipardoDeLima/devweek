@@ -2,7 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace WebApis.Token
+namespace WebAPIs.Token
 {
     public class TokenJWTBuilder
     {
@@ -11,7 +11,7 @@ namespace WebApis.Token
         private string issuer = "";
         private string audience = "";
         private Dictionary<string, string> claims = new Dictionary<string, string>();
-        private int expireInMinutes = 5;
+        private int expiryInMinutes = 5;
 
         public TokenJWTBuilder AddSecurityKey(SecurityKey securityKey)
         {
@@ -43,11 +43,18 @@ namespace WebApis.Token
             return this;
         }
 
-        public TokenJWTBuilder AddExpiry(int expiryInMinutes) 
+        public TokenJWTBuilder AddClaims(Dictionary<string, string> claims)
         {
-            this.expireInMinutes = expireInMinutes;
+            this.claims.Union(claims);
             return this;
         }
+
+        public TokenJWTBuilder AddExpiry(int expiryInMinutes)
+        {
+            this.expiryInMinutes = expiryInMinutes;
+            return this;
+        }
+
 
         private void EnsureArguments()
         {
@@ -62,16 +69,16 @@ namespace WebApis.Token
 
             if (string.IsNullOrEmpty(this.audience))
                 throw new ArgumentNullException("Audience");
-
         }
 
-        public TokenJWT Builder() 
+
+        public TokenJWT Builder()
         {
             EnsureArguments();
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, this.subject),
+                new Claim(JwtRegisteredClaimNames.Sub,this.subject),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }.Union(this.claims.Select(item => new Claim(item.Key, item.Value)));
 
@@ -79,13 +86,18 @@ namespace WebApis.Token
                 issuer: this.issuer,
                 audience: this.audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expireInMinutes),
+                expires: DateTime.UtcNow.AddMinutes(expiryInMinutes),
                 signingCredentials: new SigningCredentials(
-                                                    this.securityKey,
-                                                    SecurityAlgorithms.HmacSha256)
+                                                   this.securityKey,
+                                                   SecurityAlgorithms.HmacSha256)
+
                 );
 
             return new TokenJWT(token);
+
         }
+
+
+
     }
 }

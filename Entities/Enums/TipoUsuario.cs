@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Interfaces.InterfaceServices
+namespace Entities.Enums
 {
-    public interface IServiceMessage
+    public enum TipoUsuario
     {
+        Administrador = 1, 
+        Comum = 2
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 
-namespace WebApis.Token
+namespace WebAPIs.Token
 {
+
     public class TokenJWT
     {
         private JwtSecurityToken token;
-
         internal TokenJWT(JwtSecurityToken token)
         {
             this.token = token;
@@ -14,5 +14,6 @@ namespace WebApis.Token
         public DateTime ValidTo => token.ValidTo;
 
         public string value => new JwtSecurityTokenHandler().WriteToken(this.token);
+
     }
 }
